@@ -36,7 +36,7 @@
             <td @click="loadServices(car.car_id)" style="cursor: pointer;">{{ car.car_id }}</td>
             <td>{{ car.type }}</td>
             <td>{{ car.registered }}</td>
-            <td>{{ car.ownbrand }}</td>
+            <td>{{ car.ownbrand === 1 ? 'IGEN' : 'NEM' }}</td>
             <td>{{ car.accident }}</td>
           </tr>
         </tbody>
@@ -58,7 +58,7 @@
           <tr v-for="service in services" :key="service.id">
             <td>{{ service.lognumber }}</td>
             <td>{{ service.event }}</td>
-            <td>{{ service.event_time || service.registered }}</td>
+            <td>{{ service.eventtime || service.registered }}</td>
             <td>{{ service.document_id }}</td>
           </tr>
         </tbody>
