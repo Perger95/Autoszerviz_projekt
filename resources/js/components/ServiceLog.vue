@@ -47,3 +47,31 @@
     }
 };
 </script>
+<style scoped="">
+    table {
+    width: 35%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    }
+
+    th, td {
+    border: 1px solid #ccc;
+    padding: 4px 15px;
+    text-align: left;
+    vertical-align: middle;
+    }
+
+    th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    }
+
+    tbody tr:nth-child(even) {
+    background-color: #fafafa;
+    }
+
+    h3 {
+    margin-top: 1.5rem;
+    font-size: 1.2rem;
+    }
+</style>

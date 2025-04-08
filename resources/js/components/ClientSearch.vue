@@ -134,3 +134,60 @@ export default {
   }
 };
 </script>
+<style scoped="">
+    table {
+    width: 40%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    }
+
+    th, td {
+    border: 1px solid #ccc;
+    padding: 4px 15px;
+    text-align: left;
+    vertical-align: middle;
+    }
+
+    th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    }
+
+    tbody tr:nth-child(even) {
+    background-color: #fafafa;
+    }
+
+    h3 {
+    margin-top: 1.5rem;
+    font-size: 1.2rem;
+    }
+</style>
+<style scoped="">
+    button {
+    background-color: #007BFF;
+    color: white;
+    padding: 6px 12px;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    }
+
+    button:hover {
+    background-color: #0056b3;
+    }
+    div > div:first-of-type {
+    background-color: #e0e0e0;
+    padding: 1rem;
+    border-radius: 6px;
+    color: black;
+    }
+    h3 {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: black;
+    }
+
+</style>
+
+
