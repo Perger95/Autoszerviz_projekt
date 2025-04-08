@@ -9,6 +9,8 @@
           <th>Regisztráció</th>
           <th>Saját márka</th>
           <th>Balesetek száma</th>
+          <th>Utolsó esemény</th>
+          <th>Utolsó esemény ideje</th>
         </tr>
       </thead>
       <tbody>
@@ -20,6 +22,8 @@
           <td>{{ car.registered }}</td>
           <td>{{ car.ownbrand === 1 ? 'IGEN' : 'NEM' }}</td>
           <td>{{ car.accident }}</td>
+          <td>{{ car.last_event || '-' }}</td>
+          <td>{{ car.last_event_time || '-' }}</td>
         </tr>
       </tbody>
     </table>
