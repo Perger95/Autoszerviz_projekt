@@ -15,13 +15,12 @@ class CarController extends Controller
     }
 
     public function getCarServices($clientId, $carId)
-{
-    $services = Service::where('client_id', $clientId)
-                       ->where('car_id', $carId)
-                       ->orderBy('lognumber', 'desc')
-                       ->get();
+    {
+        $services = Service::where('client_id', $clientId)
+                           ->where('car_id', $carId)
+                           ->orderBy('lognumber', 'desc')
+                           ->get();
 
-    return response()->json($services);
-}
-
+        return response()->json($services);
+    }
 }
