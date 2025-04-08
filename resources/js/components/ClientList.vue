@@ -59,7 +59,7 @@
             <td>{{ service.lognumber }}</td>
             <td>{{ service.event }}</td>
             <td>{{ service.eventtime || service.registered }}</td>
-            <td>{{ service.document_id }}</td>
+            <td>{{ formatDocumentId(service) }}</td>
           </tr>
         </tbody>
       </table>
@@ -109,7 +109,14 @@ export default {
       } catch (error) {
         console.error('Hiba a szerviznapló lekérésekor:', error);
       }
-    }
+    },
+    formatDocumentId(service) {
+        if (!service.document_id || service.document_id === '0') {
+          return '-';
+        }
+        return service.document_id;
+      },
   }
+      
 };
 </script>

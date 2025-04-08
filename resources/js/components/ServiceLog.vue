@@ -15,7 +15,7 @@
           <td>{{ service.lognumber }}</td>
           <td>{{ service.event }}</td>
           <td>{{ formatEventTime(service) }}</td>
-          <td>{{ service.document_id }}</td>
+          <td>{{ service.document_id && service.document_id !== '0' ? service.document_id : '-' }}</td>
         </tr>
       </tbody>
     </table>
@@ -23,22 +23,27 @@
 </template>
 
 <script>
-export default {
-  name: 'ServiceLog',
-  props: {
-    services: {
-      type: Array,
-      required: true
-    }
-  },
-  methods: {
-    formatEventTime(service) {
-          if (service.event === 'regisztralt') {
-            return service.registered || '-';
-          }
-          return service.event_time || service.eventtime || '-';
+    export default {
+      name: 'ServiceLog',
+      props: {
+        services: {
+          type: Array,
+          required: true
         }
-
-  }
+      },
+      methods: {
+      formatEventTime(service) {
+        if (service.event === 'regisztralt') {
+          return service.registered || '-';
+        }
+        return service.event_time || service.eventtime || '-';
+      },
+      formatDocumentId(service) {
+        if (!service.document_id || service.document_id === '0') {
+          return '-';
+        }
+        return service.document_id;
+      }
+    }
 };
 </script>

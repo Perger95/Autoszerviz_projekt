@@ -15,12 +15,20 @@ class CarController extends Controller
     }
 
     public function getCarServices($clientId, $carId)
-    {
-        $services = Service::where('client_id', $clientId)
-                           ->where('car_id', $carId)
-                           ->orderBy('lognumber', 'desc')
-                           ->get();
+{
+    $services = Service::with('car') // fontos, hogy betöltsük a kapcsolatot
+        ->where('client_id', $clientId)
+        ->where('car_id', $carId)
+        ->orderBy('lognumber', 'desc')
+        ->get()
+        ->map(function ($service) {
+            if ($service->event === 'regisztralt' && $service->car) {
+                $service->registered = $service->car->registered;
+            }
+            return $service;
+        });
 
-        return response()->json($services);
-    }
+    return response()->json($services);
+}
+
 }
