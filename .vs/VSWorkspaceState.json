@@ -1,12 +1,16 @@
 {
   "ExpandedNodes": [
     "",
-    "\\database",
-    "\\database\\seeders",
+    "\\app\\Http",
+    "\\app\\Http\\Controllers",
+    "\\app\\Http\\Controllers\\Api",
+    "\\resources",
     "\\resources\\css",
     "\\resources\\js",
-    "\\resources\\js\\Components"
+    "\\resources\\js\\components",
+    "\\resources\\views",
+    "\\routes"
   ],
-  "SelectedNode": "\\database\\.gitignore",
+  "SelectedNode": "\\vite.config.js",
   "PreviewInSolutionExplorer": false
 }
