@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div style="height: 300px; text-align: center;">
     <h4>Ügyfelek listája</h4>
 
-    <table border="1" cellpadding="8" cellspacing="0">
+    <table style="height: 300px; text-align: center;" border="1" cellpadding="8" cellspacing="0">
       <thead>
         <tr>
           <th>ID</th>
@@ -20,7 +20,7 @@
           <tr v-if="selectedClientId === client.id">
             <td colspan="3">
               <h3>Járművei:</h3>
-              <table border="1" cellpadding="6" cellspacing="0" style="width: 100%; margin-top: 10px;">
+              <table style="height: 300px; text-align: center;" border="1" cellpadding="6" cellspacing="0" >
                 <thead>
                   <tr>
                     <th>Autó ID</th>
@@ -177,5 +177,9 @@ h4 {
   margin-bottom: 0.5rem;
   font-size: 1.5rem;
   font-weight: bold;
+}
+
+table {
+  margin: 0 auto;
 }
 </style>

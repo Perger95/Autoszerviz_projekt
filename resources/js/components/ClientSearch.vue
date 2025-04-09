@@ -1,81 +1,43 @@
 <template>
-    <div class="min-h-screen flex items-start justify-center py-10 bg-gray-100">
-        <div class="bg-white p-8 rounded-xl shadow-xl w-[550px]">
+    <div style="min-height: 300px; text-align: center;">
+
+        <div style="display: inline-block; text-align: left; width: 600px;">
             <!-- Kereső űrlap -->
-            <div class="space-y-6">
-                <h2 class="text-3xl font-bold text-black text-center shadow-[2px_2px_4px_rgba(0,0,0,0.3)] px-4 py-2 rounded-lg inline-block mb-6">
-                    Ügyfél keresés
-                </h2>
+            <div style="min-height: 120px; text-align: left;">
+                <h2>Ügyfél keresés</h2>
 
-                <div class="grid grid-cols-1 gap-6">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-600 mb-1">Név</label>
-                        <input
-                          v-model="name"
-                          placeholder="Pl. Kovács"
-                          class="w-full border border-gray-300 bg-gray-50 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-                    </div>
+        <div>
+          <div>
+            <label>Név</label>
+            <input v-model="name" placeholder="Pl. Kovács" />
+          </div>
 
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-600 mb-1">Okmányazonosító</label>
-                        <input
-                          v-model="idcard"
-                          placeholder="ABC123456"
-                          class="w-full border border-gray-300 bg-gray-50 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-                    </div>
-                </div>
+          <div>
+            <label>Okmányazonosító</label>
+            <input v-model="idcard" placeholder="ABC123456" />
+          </div>
+        </div>
 
-                <button
-                  @click="search"
-                  class="bg-indigo-600 text-white font-semibold px-6 py-2 rounded-md hover:bg-indigo-700 transition w-full"
-        >
-                    Keresés
-                </button>
+        <button @click="search">Keresés</button>
 
-                <div v-if="error" class="text-red-500 text-sm font-medium text-center">
-                    {{ error }}
-                </div>
-            </div>
+          <div v-if="error" style="color: #cc0000; margin-top: 10px;">
+              {{ error }}
+          </div>
 
-            <!-- Több találat -->
-            <div v-if="clients.length > 1" class="mt-8">
-                <p class="text-gray-700 font-medium mb-3">Több találat:</p>
-                <ul class="space-y-2">
-                    <li
-                      v-for="client in clients"
-                      :key="client.id"
-                      @click="selectClient(client)"
-                      class="cursor-pointer text-indigo-600 hover:underline"
-          >
-                        {{ client.name }} ({{ client.idcard }})
-                    </li>
-                </ul>
-            </div>
+      </div>
 
-            <!-- Kiválasztott ügyfél -->
-            <div v-if="selectedClient" class="mt-10 relative bg-white/95 p-10 rounded-xl shadow-[0_6px_20px_rgba(0,0,0,0.3)] text-center min-h-[520px]">
-                <!-- Bezárás gomb -->
-                <button
-                  @click="clearResults"
-                  class="absolute top-4 right-4 text-black hover:text-red-600 text-sm"
-                  aria-label="Bezárás"
-                  title="Bezárás"
-        >
-                    ❌ Bezárás
-                </button>
+      <!-- Kiválasztott ügyfél -->
+            <div v-if="selectedClient">
+                <h4>Ügyfél adatai:</h4>
 
-                <!-- Cím -->
-                <h2 class="text-4xl font-bold text-black mb-6 inline-block px-5 py-2 rounded-lg shadow-[2px_2px_4px_rgba(0,0,0,0.3)]">
-                    Ügyfél adatai
-                </h2>
-
-                <!-- Adatok -->
-                <div class="space-y-3 text-gray-800 text-left mt-6">
-                    <p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <p style="margin: 0;">
                         <strong>Ügyfél azonosító:</strong> {{ selectedClient.id }}
                     </p>
+                    <button @click="clearResults">❌ Bezárás</button>
+                </div>
+
+                <div>
                     <p>
                         <strong>Ügyfél neve:</strong> {{ selectedClient.name }}
                     </p>
@@ -90,32 +52,19 @@
                     </p>
                 </div>
 
-                <!-- Járművek megjelenítése gomb -->
-                <div v-if="cars.length > 0" class="mt-6">
-                    <button
-                      @click="showCars = !showCars"
-                      class="bg-indigo-500 text-white px-4 py-2 rounded-md font-medium shadow hover:bg-indigo-600 transition"
-          >
-                        {{ showCars ? 'Járművek elrejtése' : 'Járművek megtekintése' }}
-                    </button>
-                </div>
-
-                <!-- Járműlista -->
-                <CarList
-                  v-if="showCars"
-                  :cars="cars"
-                  @car-selected="loadServices"
-        />
-
-                <!-- Szerviznapló -->
-                <ServiceLog
-                  v-if="services.length > 0"
-                  :services="services"
-        />
-            </div>
+        <div v-if="cars.length > 0">
+          <button @click="showCars = !showCars">
+            {{ showCars ? 'Járművek elrejtése' : 'Járművek megtekintése' }}
+          </button>
         </div>
+
+        <CarList v-if="showCars" :cars="cars" @car-selected="loadServices" />
+        <ServiceLog v-if="services.length > 0" :services="services" />
+      </div>
     </div>
+  </div>
 </template>
+
 
 
 
@@ -229,16 +178,15 @@
 </script>
 <style scoped="">
     .table-container {
-    overflow-x: auto;
     margin-top: 1rem;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
     table {
     width: 100%;
     border-collapse: collapse;
-    background-color: white;
+    background-color: black;
     }
 
     th, td {
@@ -249,13 +197,29 @@
     }
 
     th {
-    background-color: #f3f4f6;
+    background-color: #000; /* fix: #00000 is not valid */
     font-weight: 600;
-    color: #374151;
+    color: #4f46e5;
     }
 
     tbody tr:nth-child(even) {
     background-color: #f9fafb;
+    }
+
+    /* ServiceLog egyedi táblázatstílusai */
+    .service-log table {
+    width: 60%;
+    margin-top: 1rem;
+    background-color: transparent; /* ne legyen fekete mint az alap */
+    }
+
+    .service-log th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    }
+
+    .service-log tbody tr:nth-child(even) {
+    background-color: #fafafa;
     }
 
     button {
@@ -278,8 +242,14 @@
     border-radius: 12px;
     border: 1px solid #e5e7eb;
     margin-bottom: 1.5rem;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.04);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.04);
     }
+
+    .btn-right {
+    display: inline-block;
+    text-align: right;
+    }
+
 
     h3 {
     margin-top: 1.5rem;
@@ -291,56 +261,5 @@
     font-weight: 600;
     margin-bottom: 0.75rem;
     color: #1f2937;
-    }
-</style>
-<style scoped="">
-    button {
-    background-color: #007BFF;
-    color: white;
-    padding: 6px 12px;
-    font-weight: bold;
-    border: none;
-    border-radius: 4px;
-    }
-
-    button:hover {
-    background-color: #0056b3;
-    }
-    h3 {
-    font-size: 1.4rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-    color: black;
-    }
-    h4 {
-    font-weight: bold;
-    margin-bottom: 0.6rem;
-    color: black;
-    }
-
-</style>
-
-<style scoped="">
-    /* Csak a ServiceLog komponens táblázatára, ha itt van beágyazva */
-    .service-log table {
-    width: 60%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-    }
-
-    .service-log th, .service-log td {
-    border: 1px solid #ccc;
-    padding: 4px 10px;
-    text-align: left;
-    vertical-align: middle;
-    }
-
-    .service-log th {
-    background-color: #f0f0f0;
-    font-weight: bold;
-    }
-
-    .service-log tbody tr:nth-child(even) {
-    background-color: #fafafa;
     }
 </style>
