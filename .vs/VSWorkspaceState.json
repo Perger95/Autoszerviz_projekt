@@ -1,9 +1,9 @@
 {
   "ExpandedNodes": [
     "",
+    "\\app",
     "\\app\\Http",
-    "\\app\\Http\\Controllers",
-    "\\app\\Http\\Controllers\\Api",
+    "\\app\\Models",
     "\\resources",
     "\\resources\\css",
     "\\resources\\js",
@@ -11,6 +11,6 @@
     "\\resources\\views",
     "\\routes"
   ],
-  "SelectedNode": "\\vite.config.js",
+  "SelectedNode": "\\app\\Models\\Car.php",
   "PreviewInSolutionExplorer": false
 }

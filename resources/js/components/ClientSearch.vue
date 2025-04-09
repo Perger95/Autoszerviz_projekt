@@ -76,8 +76,11 @@ export default {
       this.cars = [];
       this.services = [];
 
+
+// validalasok
+
       if (this.name && this.idcard) {
-        this.error = 'Csak az egyiket töltsd ki!';
+        this.error = 'Csak az egyik mezőt töltsd ki!';
         return;
       }
 
@@ -85,6 +88,12 @@ export default {
         this.error = 'Legalább az egyik mezőt ki kell tölteni!';
         return;
       }
+      if (this.idcard && !/^[a-zA-Z0-9]+$/.test(this.idcard)) {
+        this.error = 'Az okmányazonosító csak betűket és számokat tartalmazhat!';
+        return;
+      }
+
+
 
       try {
         const response = await axios.get('/api/client-search', {

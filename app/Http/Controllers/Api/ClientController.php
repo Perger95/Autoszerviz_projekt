@@ -38,29 +38,48 @@ class ClientController extends Controller
 
     public function search(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'nullable|required_without:idcard|string',
-            'idcard' => 'nullable|required_without:name|alpha_num',
+        $request->validate([
+            'name' => 'nullable|string',
+            'idcard' => 'nullable|alpha_num',
         ], [
-            'name.required_without' => 'Legalább az egyik mezőt ki kell tölteni!',
-            'idcard.required_without' => 'Legalább az egyik mezőt ki kell tölteni!',
             'idcard.alpha_num' => 'Az okmányazonosító csak betűket és számokat tartalmazhat!',
         ]);
 
-        $clients = Client::query()
-            ->when($validated['name'] ?? null, fn($q) => $q->where('name', 'like', '%' . $validated['name'] . '%'))
-            ->when($validated['idcard'] ?? null, fn($q) => $q->where('idcard', $validated['idcard']))
-            ->withCount(['cars', 'services'])
-            ->get();
+        $name = $request->input('name');
+        $idcard = $request->input('idcard');
 
+        // Validálások
+        if (!$name && !$idcard) {
+            return response()->json(['message' => 'Legalább az egyik mezőt ki kell tölteni!'], 422);
+        }
+        if ($name && $idcard) {
+            return response()->json(['message' => 'Csak az egyik mezőt töltsd ki!'], 422);
+        }
+
+        // Keresés okmányazonosító szerint, pontos egyezés
+        // További validálások
+        if ($idcard) {
+            $client = Client::where('idcard', $idcard)->withCount(['cars', 'services'])->first();
+            if (!$client) {
+                return response()->json(['message' => 'Nem található ilyen ügyfél!'], 404);
+            }
+            return response()->json([
+                'id' => $client->id,
+                'name' => $client->name,
+                'idcard' => $client->idcard,
+                'car_count' => $client->cars_count ?? 0,
+                'service_count' => $client->services_count ?? 0,
+            ]);
+        }
+
+        // Keresés névrészlet alapján
+        $clients = Client::where('name', 'like', '%' . $name . '%')->withCount(['cars', 'services'])->get();
         if ($clients->count() === 0) {
             return response()->json(['message' => 'Nem található ilyen ügyfél!'], 404);
         }
-
         if ($clients->count() > 1) {
             return response()->json(['message' => 'Több találat van, pontosítsd a keresést!'], 422);
         }
-
         $client = $clients->first();
 
         return response()->json([
@@ -71,4 +90,5 @@ class ClientController extends Controller
             'service_count' => $client->services_count ?? 0,
         ]);
     }
+
 }

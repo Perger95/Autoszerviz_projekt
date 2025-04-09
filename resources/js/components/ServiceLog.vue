@@ -49,7 +49,7 @@
 </script>
 <style scoped="">
     table {
-    width: 35%;
+    width: 55%;
     border-collapse: collapse;
     margin-top: 1rem;
     }

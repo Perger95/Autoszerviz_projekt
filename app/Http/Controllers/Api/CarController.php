@@ -16,7 +16,7 @@ class CarController extends Controller
 
     public function getCarServices($clientId, $carId)
 {
-    $services = Service::with('car') // fontos, hogy betöltsük a kapcsolatot
+    $services = Service::with('car')
         ->where('client_id', $clientId)
         ->where('car_id', $carId)
         ->orderBy('lognumber', 'desc')
