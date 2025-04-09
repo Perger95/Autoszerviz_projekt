@@ -51,7 +51,7 @@ DB_DATABASE=/full/path/to/database.sqlite
 touch database/database.sqlite
 ```
 
-7. Indítsd el a Vite szervert:
+7. Indítsd el a Vite szervert (indítsd el a Laravel Herd-et is):
 
 ```
 npm run dev
