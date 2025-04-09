@@ -3,33 +3,31 @@
 
         <div style="display: inline-block; text-align: left; width: 600px;">
             <!-- Kereső űrlap -->
-            <div style="min-height: 120px; text-align: left;">
+            <div class="card">
                 <h2>Ügyfél keresés</h2>
 
-        <div>
-          <div>
-            <label>Név</label>
-            <input v-model="name" placeholder="Pl. Kovács" />
-          </div>
+                <div class="form-row">
+                    <label for="name">Név</label>
+                    <input v-model="name" id="name" placeholder="Pl. Kovács" />
+                </div>
 
-          <div>
-            <label>Okmányazonosító</label>
-            <input v-model="idcard" placeholder="ABC123456" />
-          </div>
-        </div>
+                <div class="form-row">
+                    <label for="idcard">Okmányazonosító</label>
+                    <input v-model="idcard" id="idcard" placeholder="ABC123456" />
+                </div>
 
-        <button @click="search">Keresés</button>
+                <button @click="search">Keresés</button>
 
-          <div v-if="error" style="color: #cc0000; margin-top: 10px;">
-              {{ error }}
-          </div>
+                <div v-if="error" class="error-message">
+                    {{ error }}
+                </div>
 
       </div>
 
       <!-- Kiválasztott ügyfél -->
-            <div v-if="selectedClient">
+            <!-- Ügyfél adatok blokk -->
+            <div v-if="selectedClient" class="client-data">
                 <h4>Ügyfél adatai:</h4>
-
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <p style="margin: 0;">
                         <strong>Ügyfél azonosító:</strong> {{ selectedClient.id }}
@@ -52,16 +50,20 @@
                     </p>
                 </div>
 
-        <div v-if="cars.length > 0">
-          <button @click="showCars = !showCars">
-            {{ showCars ? 'Járművek elrejtése' : 'Járművek megtekintése' }}
-          </button>
-        </div>
+                <!-- Csak a gomb marad itt -->
+                <div v-if="cars.length > 0">
+                    <button @click="toggleView">
+                        {{ showCars || showServices ? 'Járművek elrejtése' : 'Járművek megtekintése' }}
+                    </button>
+                </div>
+            </div>
+            <!-- ⬇⬇⬇ ITT külön divbe tesszük a listákat, a teljes ügyfél blokk alatt -->
+            <div v-if="showCars || showServices" class="client-cars" style="margin-top: 1.5rem;">
+                <CarList v-if="showCars" :cars="cars" @car-selected="loadServices" />
+                <ServiceLog v-if="showServices" :services="services" />
+            </div>
 
-        <CarList v-if="showCars" :cars="cars" @car-selected="loadServices" />
-        <ServiceLog v-if="services.length > 0" :services="services" />
-      </div>
-    </div>
+        </div>
   </div>
 </template>
 
@@ -90,6 +92,7 @@
     cars: [],
     services: [],
     showCars: false,
+    showServices: false,
     };
     },
     methods: {
@@ -149,6 +152,10 @@
         this.selectedClient = null;
         this.showCars = false; 
       },
+       toggleView() {
+            this.showCars = !this.showCars;
+            this.showServices = !this.showServices;
+          },
     async selectClient(client) {
       this.selectedClient = client;
       await this.loadCars(client.id);
@@ -176,17 +183,70 @@
   }
 };
 </script>
+
 <style scoped="">
-    .table-container {
-    margin-top: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    .card {
+    background-color: #f9fafb;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #cbd5e1;
+    margin-bottom: 1.0rem;
+    margin-bottom: 1.0rem;
+    margin-top: 2rem;
+    box-shadow: 0 5px 4px rgba(0, 0, 0, 0.15);
     }
 
-    table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: black;
+    .client-data {
+    background-color: #cbd5e1;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #cbd5e1;
+    box-shadow: 0 5px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .client-cars {
+    top: 50%;
+    left: 50%;
+    transform: translate(-12%, 0%);
+
+    background-color: #cbd5e1;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #cbd5e1;
+    box-shadow: 0 5px 4px rgba(0, 0, 0, 0.15);
+    width: 790px;
+    }
+
+
+    .form-row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    }
+
+    .form-row label {
+    font-weight: bold;
+    margin-bottom: 4px;
+    color: #374151;
+    }
+
+    input {
+    padding: 8px 10px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border-color 0.2s ease;
+    }
+
+    input:focus {
+    border-color: #4f46e5;
+    outline: none;
+    }
+
+    th {
+    background-color: #d6e6f2;
+    font-weight: 600;
+    color: #4f46e5;
     }
 
     th, td {
@@ -196,34 +256,8 @@
     vertical-align: middle;
     }
 
-    th {
-    background-color: #000; /* fix: #00000 is not valid */
-    font-weight: 600;
-    color: #4f46e5;
-    }
-
-    tbody tr:nth-child(even) {
-    background-color: #f9fafb;
-    }
-
-    /* ServiceLog egyedi táblázatstílusai */
-    .service-log table {
-    width: 60%;
-    margin-top: 1rem;
-    background-color: transparent; /* ne legyen fekete mint az alap */
-    }
-
-    .service-log th {
-    background-color: #f0f0f0;
-    font-weight: bold;
-    }
-
-    .service-log tbody tr:nth-child(even) {
-    background-color: #fafafa;
-    }
-
     button {
-    background-color: #4f46e5;
+    background-color: #7a9fc4;
     color: white;
     padding: 8px 14px;
     font-weight: 600;
@@ -236,24 +270,16 @@
     background-color: #4338ca;
     }
 
-    .card {
-    background-color: #f9fafb;
-    padding: 1rem 1.5rem;
-    border-radius: 12px;
-    border: 1px solid #e5e7eb;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.04);
-    }
-
     .btn-right {
     display: inline-block;
     text-align: right;
     }
 
 
-    h3 {
-    margin-top: 1.5rem;
-    font-size: 1.2rem;
+    h2 {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 10px;
     }
 
     h4 {
@@ -262,4 +288,11 @@
     margin-bottom: 0.75rem;
     color: #1f2937;
     }
+
+    .error-message {
+    color: #cc0000;
+    margin-top: 10px;
+    font-weight: 500;
+    }
+
 </style>

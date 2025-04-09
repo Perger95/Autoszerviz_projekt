@@ -20,7 +20,7 @@
           <tr v-if="selectedClientId === client.id">
             <td colspan="3">
               <h3>Járművei:</h3>
-              <table style="height: 300px; text-align: center;" border="1" cellpadding="6" cellspacing="0" >
+              <table class="client-car-table" >
                 <thead>
                   <tr>
                     <th>Autó ID</th>
@@ -143,22 +143,51 @@ export default {
       
 };
 </script>
-<style scoped>
+<style scoped="">
+
+.client-car-table {
+  width: 100%;
+  max-width: 700px;
+  margin: 1rem auto;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.client-car-table th,
+.client-car-table td {
+  padding: 4px 10px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+.client-car-table td {
+  word-wrap: break-word;
+}
+
+.client-car-table th {
+  background-color: #a3bcd9; /* fakó kobaltkék */
+  color: black;
+  font-weight: bold;
+}
+
 table {
-  width: 40%;
+  margin: 0 auto;
+  width: 750px;
   border-collapse: collapse;
   margin-top: 1rem;
 }
 
 th, td {
   border: 1px solid #ccc;
-  padding: 4px 15px;
+  padding: 4px 7px;
   text-align: left;
   vertical-align: middle;
+  background-color: #fafafa;
 }
 
 th {
-  background-color: #f0f0f0;
+  background-color: #a3bcd9;
   font-weight: bold;
 }
 
@@ -179,7 +208,4 @@ h4 {
   font-weight: bold;
 }
 
-table {
-  margin: 0 auto;
-}
 </style>

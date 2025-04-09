@@ -5,7 +5,7 @@
     <title>Flexinform</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-gray-100 flex items-center justify-center">
+<body class="min-h-screen bg-gray-100 flex items-center justify-center" style="background-color: #e2e8f0;">
 
     <div id="app" class="w-full max-w-3xl space-y-6 p-4">
         <div>
