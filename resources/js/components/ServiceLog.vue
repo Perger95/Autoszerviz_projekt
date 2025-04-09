@@ -1,6 +1,6 @@
 <template>
   <div v-if="services.length > 0">
-    <h3>Szerviznapló</h3>
+    <h3>Szerviznapló:</h3>
     <table border="1" cellpadding="8" cellspacing="0">
       <thead>
         <tr>
@@ -71,7 +71,8 @@
     }
 
     h3 {
-    margin-top: 1.5rem;
+    margin-top: 0.5rem;
     font-size: 1.2rem;
+    font-weight: bold;
     }
 </style>

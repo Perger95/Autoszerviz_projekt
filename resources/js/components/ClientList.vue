@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>Ügyfelek</h3>
+    <h4>Ügyfelek listája</h4>
 
     <table border="1" cellpadding="8" cellspacing="0">
       <thead>
@@ -19,6 +19,7 @@
           </tr>
           <tr v-if="selectedClientId === client.id">
             <td colspan="3">
+              <h3>Járművei:</h3>
               <table border="1" cellpadding="6" cellspacing="0" style="width: 100%; margin-top: 10px;">
                 <thead>
                   <tr>
@@ -42,12 +43,13 @@
                       <td>{{ car.last_event || '-' }}</td>
                       <td>{{ car.last_event_time || '-' }}</td>
                     </tr>
-                    <tr v-if="services.length > 0 && selectedCarId === car.car_id">
-                      <td colspan="7">
-                        <ServiceLog :services="services" />
-                      </td>
-                    </tr>
                   </template>
+                  <!-- Szerviznapló mindig az utolsó autósor után jelenik meg -->
+                  <tr v-if="services.length > 0">
+                    <td colspan="7">
+                      <ServiceLog :services="services" />
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </td>
@@ -57,6 +59,7 @@
     </table>
   </div>
 </template>
+
 
 
 <script>
@@ -144,7 +147,15 @@ tbody tr:nth-child(even) {
 }
 
 h3 {
-  margin-top: 1.5rem;
+  margin-top: 0.1rem;
   font-size: 1.2rem;
+  font-weight: bold;
+}
+
+h4 {
+  margin-top: 2.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 </style>
