@@ -1,6 +1,6 @@
 <template>
   <div v-if="cars.length > 0">
-    <h3>Autók</h3>
+    <h3>Járművei:</h3>
     <table border="1" cellpadding="8" cellspacing="0">
       <thead>
         <tr>
@@ -65,7 +65,8 @@ export default {
     }
 
     h3 {
-    margin-top: 1.5rem;
+    margin-top: 0.1rem;
     font-size: 1.2rem;
+    font-weight: bold;
     }
 </style>

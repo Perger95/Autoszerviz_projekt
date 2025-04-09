@@ -1,50 +1,58 @@
 <template>
-  <div>
-    <h3>Ügyfél keresés</h3>
     <div>
-      <label>Ügyfél neve:</label>
-      <input v-model="name" placeholder="Pl. Kovács" />
+        <h3>Ügyfél keresés</h3>
+        <div>
+            <label>Ügyfél neve:</label>
+            <input v-model="name" placeholder="Pl. Kovács" />
 
-      <label>Okmányazonosító:</label>
-      <input v-model="idcard" placeholder="ABC123456" />
+            <label>Okmányazonosító:</label>
+            <input v-model="idcard" placeholder="ABC123456" />
 
-      <button @click="search">Keresés</button>
+            <button @click="search">Keresés</button>
+        </div>
+
+        <div v-if="error" style="color: red;">{{ error }}</div>
+
+        <div v-if="clients.length > 1">
+            <p>
+                <strong>Találatok:</strong>
+            </p>
+            <ul>
+                <li v-for="client in clients" :key="client.id">
+                    <span @click="selectClient(client)" style="cursor: pointer; color: blue;">
+                        {{ client.name }} ({{ client.idcard }})
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <div v-if="selectedClient">
+            <h4>Keresés eredménye:</h4>
+            <p>Ügyfél azonosító: {{ selectedClient.id }}</p>
+            <p>Ügyfél neve: {{ selectedClient.name }}</p>
+            <p>Okmányazonosító: {{ selectedClient.idcard }}</p>
+            <p>Autók száma: {{ selectedClient.car_count }}</p>
+            <p>Szerviznaplók száma: {{ selectedClient.service_count }}</p>
+            <button @click="clearResults"
+                style="float: right; margin: 10px 0; background: none; border: none; font-size: 18px; cursor: pointer; color: black;
+                ">Bezárás ❌</button>
+        </div>
+
+        <div v-if="cars.length > 0">
+                
+
+            <CarList
+              :cars="cars"
+              @car-selected="loadServices"
+      />
+
+            <ServiceLog
+              v-if="services.length > 0"
+              :services="services"
+      />
+        </div>
     </div>
-
-    <div v-if="error" style="color: red;">{{ error }}</div>
-
-    <div v-if="clients.length > 1">
-      <p><strong>Találatok:</strong></p>
-      <ul>
-        <li v-for="client in clients" :key="client.id">
-          <span @click="selectClient(client)" style="cursor: pointer; color: blue;">
-            {{ client.name }} ({{ client.idcard }})
-          </span>
-        </li>
-      </ul>
-    </div>
-
-    <div v-if="selectedClient">
-      <h4>Találat</h4>
-      <p>Ügyfél azonosító: {{ selectedClient.id }}</p>
-      <p>Ügyfél neve: {{ selectedClient.name }}</p>
-      <p>Okmányazonosító: {{ selectedClient.idcard }}</p>
-      <p>Autók száma: {{ selectedClient.car_count }}</p>
-      <p>Szerviznaplók száma: {{ selectedClient.service_count }}</p>
-    </div>
-
-    <CarList
-      v-if="cars.length > 0"
-      :cars="cars"
-      @car-selected="loadServices"
-    />
-
-    <ServiceLog
-      v-if="services.length > 0"
-      :services="services"
-    />
-  </div>
 </template>
+
 
 <script>
 import axios from 'axios';
@@ -75,6 +83,8 @@ export default {
       this.selectedClient = null;
       this.cars = [];
       this.services = [];
+
+
 
 
 // validalasok
@@ -116,10 +126,16 @@ export default {
         this.error = err.response?.data?.message || 'Hiba a keresés során.';
       }
     },
+        clearResults() {
+        this.cars = [];
+        this.services = [];
+        this.selectedCarId = null;
+        this.selectedClient = null;
+      },
     async selectClient(client) {
       this.selectedClient = client;
       await this.loadCars(client.id);
-    },
+      },
     async loadCars(clientId) {
       try {
         const response = await axios.get(`/api/clients/${clientId}/cars`);
@@ -197,7 +213,37 @@ export default {
     margin-bottom: 1rem;
     color: black;
     }
+    h4 {
+    font-weight: bold;
+    margin-bottom: 0.6rem;
+    color: black;
+    }
 
+</style>
+
+<style scoped="">
+    /* Csak a ServiceLog komponens táblázatára, ha itt van beágyazva */
+    .service-log table {
+    width: 60%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    }
+
+    .service-log th, .service-log td {
+    border: 1px solid #ccc;
+    padding: 4px 10px;
+    text-align: left;
+    vertical-align: middle;
+    }
+
+    .service-log th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    }
+
+    .service-log tbody tr:nth-child(even) {
+    background-color: #fafafa;
+    }
 </style>
 
 

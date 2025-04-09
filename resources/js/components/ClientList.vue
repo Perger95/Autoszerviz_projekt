@@ -62,6 +62,7 @@
 
 
 
+
 <script>
 import axios from 'axios';
 import ServiceLog from './ServiceLog.vue';
@@ -95,16 +96,35 @@ export default {
     },
     async loadCars(clientId) {
       try {
+        if (this.selectedClientId === clientId) {
+          // Ugyanarra kattintott → zárjuk be
+          this.selectedClientId = null;
+          this.cars = [];
+          this.services = [];
+          this.selectedCarId = null;
+          return;
+        }
+
+        // Új ügyfélre kattintott
         const response = await axios.get(`/api/clients/${clientId}/cars`);
         this.cars = response.data;
         this.services = [];
-        this.selectedClientId = clientId; // tároljuk a kiválasztott ügyfél ID-jét
+        this.selectedClientId = clientId;
+        this.selectedCarId = null;
       } catch (error) {
         console.error('Hiba az autók lekérésekor:', error);
       }
     },
     async loadServices(carId) {
       try {
+        if (this.selectedCarId === carId) {
+          // Ha újra ugyanarra az autóra kattintott → zárjuk be
+          this.selectedCarId = null;
+          this.services = [];
+          return;
+        }
+
+        // Új autó, betöltjük a szerviznaplót
         const response = await axios.get(`/api/clients/${this.selectedClientId}/cars/${carId}/services`);
         this.services = response.data;
         this.selectedCarId = carId;
