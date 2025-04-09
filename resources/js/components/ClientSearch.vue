@@ -189,6 +189,7 @@ export default {
     padding: 1rem;
     border-radius: 6px;
     color: black;
+    width:  80%;
     }
     h3 {
     font-size: 1.4rem;

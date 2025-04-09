@@ -43,7 +43,7 @@ export default {
 </script>
 <style scoped="">
     table {
-    width: 35%;
+    width: 100%;
     border-collapse: collapse;
     margin-top: 1rem;
     }
