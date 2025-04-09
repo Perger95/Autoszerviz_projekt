@@ -16,8 +16,25 @@ class ClientController extends Controller
     public function cars($id)
     {
         $client = Client::with('cars')->findOrFail($id);
-        return response()->json($client->cars);
+
+        $cars = $client->cars->map(function ($car) {
+            $lastService = \App\Models\Service::where('car_id', $car->car_id)
+                ->where('client_id', $car->client_id)
+                ->orderByDesc('lognumber')
+                ->first();
+
+            $car->last_event = $lastService?->event ?? null;
+            $car->last_event_time = $lastService && $lastService->event === 'regisztralt'
+                ? $car->registered
+                : ($lastService?->event_time ?? $lastService?->eventtime ?? null);
+
+            return $car;
+        });
+
+        return response()->json($cars->values());
     }
+
+
 
     public function search(Request $request)
     {
