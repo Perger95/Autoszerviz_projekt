@@ -18,7 +18,7 @@
             <td>{{ client.idcard }}</td>
           </tr>
           <tr v-if="selectedClientId === client.id">
-            <td colspan="3">    
+            <td colspan="3">
               <table border="1" cellpadding="6" cellspacing="0" style="width: 100%; margin-top: 10px;">
                 <thead>
                   <tr>
@@ -32,38 +32,22 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="car in cars" :key="car.id">
-                    <td @click="loadServices(car.car_id)" style="cursor: pointer;">{{ car.car_id }}</td>
-                    <td>{{ car.type }}</td>
-                    <td>{{ car.registered }}</td>
-                    <td>{{ car.ownbrand === 1 ? 'IGEN' : 'NEM' }}</td>
-                    <td>{{ car.accident }}</td>
-                    <td>{{ car.last_event || '-' }}</td>
-                    <td>{{ car.last_event_time || '-' }}</td>
+                  <template v-for="car in cars" :key="car.id">
+                    <tr>
+                      <td @click="loadServices(car.car_id)" style="cursor: pointer;">{{ car.car_id }}</td>
+                      <td>{{ car.type }}</td>
+                      <td>{{ car.registered }}</td>
+                      <td>{{ car.ownbrand === 1 ? 'IGEN' : 'NEM' }}</td>
+                      <td>{{ car.accident }}</td>
+                      <td>{{ car.last_event || '-' }}</td>
+                      <td>{{ car.last_event_time || '-' }}</td>
+                    </tr>
                     <tr v-if="services.length > 0 && selectedCarId === car.car_id">
                       <td colspan="7">
-                        <h4>Szerviznapló</h4>
-                        <table border="1" cellpadding="6" cellspacing="0" style="width: 100%; margin-top: 8px;">
-                          <thead>
-                            <tr>
-                              <th>Alkalom sorszáma</th>
-                              <th>Esemény neve</th>
-                              <th>Esemény időpontja</th>
-                              <th>Munkalap azonosító</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr v-for="service in services" :key="service.id">
-                              <td>{{ service.lognumber }}</td>
-                              <td>{{ service.event }}</td>
-                              <td>{{ formatEventTime(service) }}</td>
-                              <td>{{ formatDocumentId(service) }}</td>
-                            </tr>
-                          </tbody>
-                        </table>
+                        <ServiceLog :services="services" />
                       </td>
                     </tr>
-                  </tr>
+                  </template>
                 </tbody>
               </table>
             </td>
@@ -74,17 +58,24 @@
   </div>
 </template>
 
+
 <script>
 import axios from 'axios';
+import ServiceLog from './ServiceLog.vue';
+
 
 export default {
+  components: {
+    ServiceLog
+  },
   name: 'ClientList',
   data() {
     return {
       clients: [],
       cars: [],
       services: [],
-      selectedClientId: null
+      selectedClientId: null,
+      selectedCarId: null
     };
   },
   mounted() {
