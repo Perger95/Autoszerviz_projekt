@@ -83,3 +83,4 @@ A fejlesztés Windows alatt, Laravel Herd segítségével történt. Az SSL és 
 ---
 
 Készítette:
+Perger Tamás
