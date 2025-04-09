@@ -1,95 +1,162 @@
 <template>
-    <div>
-        <h3>Ügyfél keresés</h3>
-        <div>
-            <label>Ügyfél neve:</label>
-            <input v-model="name" placeholder="Pl. Kovács" />
+    <div class="min-h-screen flex items-start justify-center py-10 bg-gray-100">
+        <div class="bg-white p-8 rounded-xl shadow-xl w-[550px]">
+            <!-- Kereső űrlap -->
+            <div class="space-y-6">
+                <h2 class="text-3xl font-bold text-black text-center shadow-[2px_2px_4px_rgba(0,0,0,0.3)] px-4 py-2 rounded-lg inline-block mb-6">
+                    Ügyfél keresés
+                </h2>
 
-            <label>Okmányazonosító:</label>
-            <input v-model="idcard" placeholder="ABC123456" />
+                <div class="grid grid-cols-1 gap-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-600 mb-1">Név</label>
+                        <input
+                          v-model="name"
+                          placeholder="Pl. Kovács"
+                          class="w-full border border-gray-300 bg-gray-50 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+                    </div>
 
-            <button @click="search">Keresés</button>
-        </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-600 mb-1">Okmányazonosító</label>
+                        <input
+                          v-model="idcard"
+                          placeholder="ABC123456"
+                          class="w-full border border-gray-300 bg-gray-50 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+                    </div>
+                </div>
 
-        <div v-if="error" style="color: red;">{{ error }}</div>
+                <button
+                  @click="search"
+                  class="bg-indigo-600 text-white font-semibold px-6 py-2 rounded-md hover:bg-indigo-700 transition w-full"
+        >
+                    Keresés
+                </button>
 
-        <div v-if="clients.length > 1">
-            <p>
-                <strong>Találatok:</strong>
-            </p>
-            <ul>
-                <li v-for="client in clients" :key="client.id">
-                    <span @click="selectClient(client)" style="cursor: pointer; color: blue;">
+                <div v-if="error" class="text-red-500 text-sm font-medium text-center">
+                    {{ error }}
+                </div>
+            </div>
+
+            <!-- Több találat -->
+            <div v-if="clients.length > 1" class="mt-8">
+                <p class="text-gray-700 font-medium mb-3">Több találat:</p>
+                <ul class="space-y-2">
+                    <li
+                      v-for="client in clients"
+                      :key="client.id"
+                      @click="selectClient(client)"
+                      class="cursor-pointer text-indigo-600 hover:underline"
+          >
                         {{ client.name }} ({{ client.idcard }})
-                    </span>
-                </li>
-            </ul>
-        </div>
-        <div v-if="selectedClient">
-            <h4>Keresés eredménye:</h4>
-            <p>Ügyfél azonosító: {{ selectedClient.id }}</p>
-            <p>Ügyfél neve: {{ selectedClient.name }}</p>
-            <p>Okmányazonosító: {{ selectedClient.idcard }}</p>
-            <p>Autók száma: {{ selectedClient.car_count }}</p>
-            <p>Szerviznaplók száma: {{ selectedClient.service_count }}</p>
-            <button @click="clearResults"
-                style="float: right; margin: 10px 0; background: none; border: none; font-size: 18px; cursor: pointer; color: black;
-                ">Bezárás ❌</button>
-        </div>
+                    </li>
+                </ul>
+            </div>
 
-        <div v-if="cars.length > 0">
-                
+            <!-- Kiválasztott ügyfél -->
+            <div v-if="selectedClient" class="mt-10 relative bg-white/95 p-10 rounded-xl shadow-[0_6px_20px_rgba(0,0,0,0.3)] text-center min-h-[520px]">
+                <!-- Bezárás gomb -->
+                <button
+                  @click="clearResults"
+                  class="absolute top-4 right-4 text-black hover:text-red-600 text-sm"
+                  aria-label="Bezárás"
+                  title="Bezárás"
+        >
+                    ❌ Bezárás
+                </button>
 
-            <CarList
-              :cars="cars"
-              @car-selected="loadServices"
-      />
+                <!-- Cím -->
+                <h2 class="text-4xl font-bold text-black mb-6 inline-block px-5 py-2 rounded-lg shadow-[2px_2px_4px_rgba(0,0,0,0.3)]">
+                    Ügyfél adatai
+                </h2>
 
-            <ServiceLog
-              v-if="services.length > 0"
-              :services="services"
-      />
+                <!-- Adatok -->
+                <div class="space-y-3 text-gray-800 text-left mt-6">
+                    <p>
+                        <strong>Ügyfél azonosító:</strong> {{ selectedClient.id }}
+                    </p>
+                    <p>
+                        <strong>Ügyfél neve:</strong> {{ selectedClient.name }}
+                    </p>
+                    <p>
+                        <strong>Okmányazonosító:</strong> {{ selectedClient.idcard }}
+                    </p>
+                    <p>
+                        <strong>Autók száma:</strong> {{ cars.length }}
+                    </p>
+                    <p>
+                        <strong>Szerviznaplók száma:</strong> {{ services.length }}
+                    </p>
+                </div>
+
+                <!-- Járművek megjelenítése gomb -->
+                <div v-if="cars.length > 0" class="mt-6">
+                    <button
+                      @click="showCars = !showCars"
+                      class="bg-indigo-500 text-white px-4 py-2 rounded-md font-medium shadow hover:bg-indigo-600 transition"
+          >
+                        {{ showCars ? 'Járművek elrejtése' : 'Járművek megtekintése' }}
+                    </button>
+                </div>
+
+                <!-- Járműlista -->
+                <CarList
+                  v-if="showCars"
+                  :cars="cars"
+                  @car-selected="loadServices"
+        />
+
+                <!-- Szerviznapló -->
+                <ServiceLog
+                  v-if="services.length > 0"
+                  :services="services"
+        />
+            </div>
         </div>
     </div>
 </template>
 
 
-<script>
-import axios from 'axios';
-import CarList from './CarList.vue';
-import ServiceLog from './ServiceLog.vue';
 
-export default {
-  name: 'ClientSearch',
-  components: {
+
+<script>
+    import axios from 'axios';
+    import CarList from './CarList.vue';
+    import ServiceLog from './ServiceLog.vue';
+
+    export default {
+    name: 'ClientSearch',
+    components: {
     CarList,
     ServiceLog
-  },
-  data() {
+    },
+    data() {
     return {
-      name: '',
-      idcard: '',
-      error: '',
-      clients: [],
-      selectedClient: null,
-      cars: [],
-      services: [],
+    name: '',
+    idcard: '',
+    error: '',
+    clients: [],
+    selectedClient: null,
+    cars: [],
+    services: [],
+    showCars: false,
     };
-  },
-  methods: {
+    },
+    methods: {
     async search() {
-      this.error = '';
-      this.clients = [];
-      this.selectedClient = null;
-      this.cars = [];
-      this.services = [];
+    this.error = '';
+    this.clients = [];
+    this.selectedClient = null;
+    this.cars = [];
+    this.services = [];
 
 
 
 
-// validalasok
+    // validalasok
 
-      if (this.name && this.idcard) {
+    if (this.name && this.idcard) {
         this.error = 'Csak az egyik mezőt töltsd ki!';
         return;
       }
@@ -131,6 +198,7 @@ export default {
         this.services = [];
         this.selectedCarId = null;
         this.selectedClient = null;
+        this.showCars = false; 
       },
     async selectClient(client) {
       this.selectedClient = client;
@@ -160,10 +228,17 @@ export default {
 };
 </script>
 <style scoped="">
-    table {
-    width: 40%;
-    border-collapse: collapse;
+    .table-container {
+    overflow-x: auto;
     margin-top: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
     }
 
     th, td {
@@ -174,17 +249,48 @@ export default {
     }
 
     th {
-    background-color: #f0f0f0;
-    font-weight: bold;
+    background-color: #f3f4f6;
+    font-weight: 600;
+    color: #374151;
     }
 
     tbody tr:nth-child(even) {
-    background-color: #fafafa;
+    background-color: #f9fafb;
+    }
+
+    button {
+    background-color: #4f46e5;
+    color: white;
+    padding: 8px 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+    background-color: #4338ca;
+    }
+
+    .card {
+    background-color: #f9fafb;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.04);
     }
 
     h3 {
     margin-top: 1.5rem;
     font-size: 1.2rem;
+    }
+
+    h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #1f2937;
     }
 </style>
 <style scoped="">
@@ -199,13 +305,6 @@ export default {
 
     button:hover {
     background-color: #0056b3;
-    }
-    div > div:first-of-type {
-    background-color: #e0e0e0;
-    padding: 1rem;
-    border-radius: 6px;
-    color: black;
-    width:  80%;
     }
     h3 {
     font-size: 1.4rem;
@@ -245,5 +344,3 @@ export default {
     background-color: #fafafa;
     }
 </style>
-
-

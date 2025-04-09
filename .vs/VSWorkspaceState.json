@@ -11,6 +11,6 @@
     "\\resources\\views",
     "\\routes"
   ],
-  "SelectedNode": "\\app\\Models\\Car.php",
+  "SelectedNode": "\\resources\\views\\homepage.blade.php",
   "PreviewInSolutionExplorer": false
 }
